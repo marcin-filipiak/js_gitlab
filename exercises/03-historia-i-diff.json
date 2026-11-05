@@ -1,0 +1,70 @@
+{
+  "id": "03-historia-i-diff",
+  "title": "Historia i różnice",
+  "level": "Podstawy",
+  "estimatedMinutes": 12,
+  "summary": "Obejrzyj niezatwierdzone zmiany przez git diff oraz historię i szczegóły commitów przez git log i git show.",
+  "description": "## Cel ćwiczenia\n\nDowiesz się, jak Git pokazuje historię oraz różnice między wersjami plików.\n\nW katalogu roboczym są już dwie niezatwierdzone zmiany:\n\n- `README.md` ma dopisany nowy akapit,\n- `app.js` jest nowym, nieśledzonym plikiem.\n\n### 1. Sprawdź stan\n\n```bash\ngit status\n```\n\n### 2. Zobacz różnice w śledzonym pliku\n\n```bash\ngit diff\n```\n\n`git diff` pokazuje zmiany między katalogiem roboczym a poczekalnią. Pliki nieśledzone nie pojawiają się w tym wyniku.\n\n### 3. Obejrzyj historię i ostatni commit\n\n```bash\ngit log --oneline\ngit show HEAD\n```\n\n`git show HEAD` pokazuje szczegóły ostatniego commita razem z jego diffem.\n\n### 4. Zatwierdź obie zmiany\n\n```bash\ngit add README.md app.js\ngit commit -m \"Drugi commit: opis zmian\"\n```\n\n### 5. Potwierdź stan\n\n```bash\ngit status\ngit log --oneline\n```\n\n> `git diff --staged` pokazuje zmiany przygotowane do commita, czyli różnicę między poczekalnią a ostatnim commitem.",
+  "initialFiles": {
+    "README.md": "# Projekt\n\nPierwsza wersja dokumentacji.\n"
+  },
+  "setupCommands": [
+    "git init",
+    "git add README.md",
+    "git commit -m \"Dodaj README\"",
+    "echo \"Nowy akapit opisujący projekt.\" >> README.md",
+    "echo \"console.log('hello');\" > app.js"
+  ],
+  "tasks": [
+    {
+      "label": "Wyświetlono stan repozytorium komendą git status",
+      "check": { "type": "commandUsed", "pattern": "/^git status/" }
+    },
+    {
+      "label": "Wyświetlono różnice komendą git diff",
+      "check": { "type": "commandUsed", "pattern": "/^git diff/" }
+    },
+    {
+      "label": "Wyświetlono historię komendą git log",
+      "check": { "type": "commandUsed", "pattern": "/^git log/" }
+    },
+    {
+      "label": "Wyświetlono szczegóły commita komendą git show",
+      "check": { "type": "commandUsed", "pattern": "/^git show/" }
+    },
+    {
+      "label": "Nowy akapit w README.md nadal istnieje",
+      "check": { "type": "fileContent", "path": "README.md", "contains": "Nowy akapit" }
+    },
+    {
+      "label": "Plik app.js został utworzony i zatwierdzony",
+      "check": [
+        { "type": "fileExists", "path": "app.js" },
+        { "type": "commitHasFile", "path": "app.js" }
+      ]
+    },
+    {
+      "label": "README.md jest obecny w najnowszym commicie",
+      "check": { "type": "commitHasFile", "path": "README.md" }
+    },
+    {
+      "label": "Historia zawiera dwa commity",
+      "check": { "type": "commitCount", "exact": 2 }
+    },
+    {
+      "label": "Komunikat drugiego commita nawiązuje do zmian lub historii",
+      "check": { "type": "commitMessage", "pattern": "/drugi|zmian|diff|historia/i", "last": true }
+    },
+    {
+      "label": "Drzewo robocze jest czyste",
+      "check": { "type": "clean" }
+    }
+  ],
+  "hints": [
+    "Zacznij od `git status` — zobaczysz zmodyfikowany `README.md` i nieśledzony `app.js`.",
+    "`git diff` pokaże tylko zmiany w plikach śledzonych, czyli w `README.md`. Nowy plik `app.js` nie pojawi się w tym wyniku.",
+    "Historię wyświetlisz przez `git log --oneline`, a szczegóły ostatniego commita przez `git show HEAD`.",
+    "Dodaj oba pliki: `git add README.md app.js`, a następnie zatwierdź: `git commit -m \"Drugi commit: opis zmian\"`.",
+    "Na końcu `git status` powinien pokazać czyste drzewo robocze."
+  ]
+}

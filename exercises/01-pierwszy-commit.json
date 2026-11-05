@@ -1,0 +1,55 @@
+{
+  "id": "01-pierwszy-commit",
+  "title": "Pierwszy commit",
+  "level": "Podstawy",
+  "estimatedMinutes": 10,
+  "summary": "Skonfiguruj autora, zainicjalizuj repozytorium, dodaj plik README.md i zapisz go w pierwszym commicie.",
+  "description": "## Cel ćwiczenia\n\nNauczysz się podstawowego cyklu pracy z Gitem: **skonfiguruj autora → utwórz plik → dodaj go do poczekalni → zatwierdź zmiany**.\n\n### 1. Skonfiguruj autora\n\nGit zapisuje w każdym commicie imię i adres e-mail autora. Ustaw je na początku pracy:\n\n```bash\ngit config --global user.name \"Anna Kowalska\"\ngit config --global user.email \"anna@example.com\"\n```\n\nOpcja `--global` oznacza konfigurację dla wszystkich repozytoriów użytkownika. W symulatorze działa też krótsza forma `git config user.name \"...\"`.\n\n### 2. Zainicjalizuj repozytorium\n\n```bash\ngit init\n```\n\n### 3. Utwórz plik README.md\n\nMożesz to zrobić w zakładce **Pliki** (przycisk _+ Nowy plik_) albo w terminalu:\n\n```bash\ntouch README.md\n```\n\n### 4. Dodaj plik do poczekalni\n\n```bash\ngit add README.md\n```\n\n### 5. Zatwierdź zmiany\n\n```bash\ngit commit -m \"Initial commit\"\n```\n\n### 6. Sprawdź historię\n\n```bash\ngit log --oneline\n```\n\n> Wskazówka: po każdej komendzie możesz uruchomić `git status`, aby zobaczyć, co dzieje się w repozytorium.",
+  "tasks": [
+    {
+      "label": "Ustawiono nazwę autora komendą git config user.name",
+      "check": [
+        { "type": "commandUsed", "pattern": "/^git config\\s+(?:--global\\s+)?user\\.name\\s+/" },
+        { "type": "configValue", "key": "user.name" }
+      ]
+    },
+    {
+      "label": "Ustawiono adres e-mail autora komendą git config user.email",
+      "check": [
+        { "type": "commandUsed", "pattern": "/^git config\\s+(?:--global\\s+)?user\\.email\\s+/" },
+        { "type": "configValue", "key": "user.email" }
+      ]
+    },
+    {
+      "label": "Repozytorium Git jest zainicjalizowane",
+      "check": { "type": "initialized" }
+    },
+    {
+      "label": "Plik README.md istnieje w katalogu roboczym",
+      "check": { "type": "fileExists", "path": "README.md" }
+    },
+    {
+      "label": "README.md znajduje się w ostatnim commicie",
+      "check": { "type": "commitHasFile", "path": "README.md" }
+    },
+    {
+      "label": "Komunikat commita zawiera słowo „init” lub „pierwszy”",
+      "check": { "type": "commitMessage", "pattern": "/init|pierwszy/i", "last": false }
+    },
+    {
+      "label": "Drzewo robocze jest czyste — wszystko zostało zatwierdzone",
+      "check": [{ "type": "clean" }, { "type": "commitCount", "min": 1 }]
+    },
+    {
+      "label": "Historia została wyświetlona komendą git log",
+      "check": { "type": "commandUsed", "pattern": "/^git log/" }
+    }
+  ],
+  "hints": [
+    "Zacznij od `git config --global user.name \"Twoje Imię\"` i `git config --global user.email \"ty@example.com\"`. Te komendy działają jeszcze przed `git init`.",
+    "Następnie uruchom `git init`. Po tej komendzie w prawym górnym rogu zobaczysz nazwę gałęzi `main`.",
+    "Plik utworzysz w zakładce **Pliki** lub komendą `touch README.md`. Możesz też od razu wpisać do niego treść w edytorze.",
+    "Aby zapisać zmiany: `git add README.md`, a następnie `git commit -m \"Initial commit\"`.",
+    "Historię wyświetlisz przez `git log`, `git log --oneline` lub w zakładce **Historia**."
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "id": "07-scalanie-fast-forward",
+  "title": "Scalanie fast-forward",
+  "level": "Podstawy",
+  "estimatedMinutes": 10,
+  "summary": "Scal gałąź feature z main i zobacz, jak działa szybkie przewijanie (fast-forward).",
+  "description": "## Cel ćwiczenia\n\nGdy główna gałąź nie ma nowych commitów od momentu utworzenia gałęzi, Git może wykonać **fast-forward** — po prostu przesunąć wskaźnik `main` do przodu, bez tworzenia commita scalającego.\n\n### 1. Sprawdź stan gałęzi\n\n```bash\ngit branch\ngit log --oneline --all\n```\n\n`main` wskazuje na pierwszy commit, a `feature` jest o jeden commit dalej.\n\n### 2. Wykonaj scalanie\n\n```bash\ngit merge feature\n```\n\nPonieważ `main` jest bezpośrednim przodkiem `feature`, Git wykona szybkie przewijanie.\n\n### 3. Sprawdź efekt\n\n```bash\ngit log --oneline\ngit status\n```\n\nNa gałęzi `main` powinien pojawić się plik `feature.js`, a historia powinna zawierać **dwa** commity — bez dodatkowego commita scalającego.\n\n> Porównaj: `git log --graph --oneline --all`. Przy fast-forward historia jest liniowa.",
+  "initialFiles": {
+    "app.js": "console.log('wersja 1');\n"
+  },
+  "setupCommands": [
+    "git init",
+    "git add app.js",
+    "git commit -m \"Wersja 1\"",
+    "git branch feature",
+    "git switch feature",
+    "echo \"console.log('nowa funkcja');\" > feature.js",
+    "git add feature.js",
+    "git commit -m \"Dodaj funkcję\"",
+    "git switch main"
+  ],
+  "tasks": [
+    {
+      "label": "Aktywna jest gałąź main",
+      "check": { "type": "currentBranch", "name": "main" }
+    },
+    {
+      "label": "Gałąź feature nadal istnieje",
+      "check": { "type": "branchExists", "name": "feature" }
+    },
+    {
+      "label": "Wykonano scalanie komendą git merge feature",
+      "check": { "type": "commandUsed", "pattern": "/^git merge feature/" }
+    },
+    {
+      "label": "Plik feature.js jest teraz na gałęzi main",
+      "check": { "type": "commitHasFile", "path": "feature.js" }
+    },
+    {
+      "label": "Historia main zawiera dwa commity",
+      "check": { "type": "commitCount", "exact": 2 }
+    },
+    {
+      "label": "Scalanie odbyło się bez commita scalającego (fast-forward)",
+      "check": { "not": { "type": "mergeCommit" } }
+    },
+    {
+      "label": "Ostatni commit nadal dotyczy funkcji",
+      "check": { "type": "commitMessage", "pattern": "/funkc|feature/i", "last": true }
+    },
+    {
+      "label": "Drzewo robocze jest czyste",
+      "check": { "type": "clean" }
+    }
+  ],
+  "hints": [
+    "Sprawdź położenie gałęzi: `git log --oneline --all` — `main` i `feature` są na różnych commitach.",
+    "Upewnij się, że jesteś na `main`: `git switch main` (jeśli jeszcze nie jesteś).",
+    "Scal gałąź: `git merge feature`.",
+    "Git powinien wypisać informację o szybkim przewijaniu (fast-forward) i przesunąć `main` do commita z gałęzi feature.",
+    "`git log --oneline` pokaże dwa commity, a `git status` czyste drzewo."
+  ]
+}

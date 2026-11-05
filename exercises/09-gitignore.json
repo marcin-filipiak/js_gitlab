@@ -1,0 +1,77 @@
+{
+  "id": "09-gitignore",
+  "title": "Pliki ignorowane (.gitignore)",
+  "level": "Średniozaawansowany",
+  "estimatedMinutes": 14,
+  "summary": "Skonfiguruj .gitignore tak, aby logi i katalog node_modules nie trafiały do repozytorium.",
+  "description": "## Cel ćwiczenia\n\nNie każdy plik powinien trafić do repozytorium. Logi, pliki tymczasowe i zależności (np. `node_modules/`) zwykle ignorujemy. Służy do tego plik `.gitignore`.\n\nW projekcie są już zatwierdzone `README.md` i `src/main.js`. Nieśledzone są:\n\n- `app.log` i `debug.log` — pliki logów,\n- `node_modules/library/index.js` — przykładowa zależność.\n\n### 1. Utwórz plik .gitignore\n\nW zakładce **Pliki** utwórz `.gitignore` z treścią:\n\n```text\n*.log\nnode_modules/\n```\n\nMożesz też użyć terminala:\n\n```bash\necho \"*.log\" > .gitignore\necho \"node_modules/\" >> .gitignore\n```\n\n### 2. Sprawdź efekt\n\n```bash\ngit status\n```\n\nPliki `app.log`, `debug.log` oraz zawartość `node_modules/` znikną z listy plików nieśledzonych i pojawią się jako ignorowane. `.gitignore` powinien być widoczny jako nowy plik.\n\n### 3. Zatwierdź .gitignore\n\n```bash\ngit add .\ngit commit -m \"Dodaj .gitignore\"\n```\n\n`git add .` pominie pliki ignorowane — tego właśnie oczekujemy.\n\n### 4. Sprawdź\n\n```bash\ngit status\ngit ls-files\n```\n\n> Wzorce w `.gitignore` działają na ścieżki. `*.log` ignoruje pliki z rozszerzeniem `.log` w dowolnym katalogu, a `node_modules/` cały katalog. Wyjątek od reguły można wprowadzić znakiem `!`, np. `!ważny.log`.",
+  "initialFiles": {
+    "README.md": "# Projekt\n\nPrzykładowy projekt z logami i zależnościami.\n",
+    "src/main.js": "console.log('aplikacja');\n",
+    "app.log": "2026-01-01 INFO start aplikacji\n",
+    "debug.log": "DEBUG: szczegóły działania\n",
+    "node_modules/library/index.js": "module.exports = {};\n"
+  },
+  "setupCommands": [
+    "git init",
+    "git add README.md src/main.js",
+    "git commit -m \"Dodaj README i źródła\""
+  ],
+  "tasks": [
+    {
+      "label": "Plik .gitignore istnieje",
+      "check": { "type": "fileExists", "path": ".gitignore" }
+    },
+    {
+      "label": ".gitignore zawiera regułę *.log",
+      "check": { "type": "fileContent", "path": ".gitignore", "contains": "*.log" }
+    },
+    {
+      "label": ".gitignore zawiera regułę node_modules/",
+      "check": { "type": "fileContent", "path": ".gitignore", "contains": "node_modules" }
+    },
+    {
+      "label": "Plik app.log jest ignorowany",
+      "check": { "type": "ignored", "path": "app.log" }
+    },
+    {
+      "label": "Plik debug.log jest ignorowany",
+      "check": { "type": "ignored", "path": "debug.log" }
+    },
+    {
+      "label": "Katalog node_modules jest ignorowany",
+      "check": { "type": "ignored", "path": "node_modules/library/index.js" }
+    },
+    {
+      "label": "Pliki logów nie zostały dodane do repozytorium",
+      "check": [
+        { "not": { "type": "fileTracked", "path": "app.log" } },
+        { "not": { "type": "fileTracked", "path": "debug.log" } }
+      ]
+    },
+    {
+      "label": "Zależność z node_modules nie została dodana do repozytorium",
+      "check": { "not": { "type": "fileTracked", "path": "node_modules/library/index.js" } }
+    },
+    {
+      "label": "Plik .gitignore został zatwierdzony",
+      "check": { "type": "commitHasFile", "path": ".gitignore" }
+    },
+    {
+      "label": "Ostatni komunikat commita dotyczy .gitignore",
+      "check": { "type": "commitMessage", "pattern": "/gitignore|ignor/i", "last": true }
+    },
+    {
+      "label": "Drzewo robocze jest czyste (poza plikami ignorowanymi)",
+      "check": { "type": "clean" }
+    }
+  ],
+  "hints": [
+    "Utwórz `.gitignore` w zakładce **Pliki** lub wpisz w terminalu: `echo \"*.log\" > .gitignore`.",
+    "Dopisz drugą regułę: `echo \"node_modules/\" >> .gitignore` (dwa znaki `>` dopisują do pliku).",
+    "`git status` powinien pokazać `.gitignore` jako nowy plik, a logi i `node_modules` w sekcji plików ignorowanych.",
+    "Dodaj wszystko: `git add .` — Git pominie pliki ignorowane.",
+    "Zatwierdź: `git commit -m \"Dodaj .gitignore\"`.",
+    "Sprawdź zawartość repozytorium przez `git ls-files`. Logi i node_modules nie powinny się tam znaleźć."
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "id": "10-rm-i-mv",
+  "title": "Usuwanie i przenoszenie plików",
+  "level": "Podstawy",
+  "estimatedMinutes": 10,
+  "summary": "Użyj git mv do zmiany nazwy pliku i git rm do usunięcia pliku, a następnie zatwierdź porządki.",
+  "description": "## Cel ćwiczenia\n\nGit śledzi nie tylko zawartość plików, ale też ich ścieżki. Do zmian nazw i usuwania plików służą `git mv` i `git rm` — od razu aktualizują poczekalnię.\n\nW repozytorium są trzy pliki: `README.md`, `stary.txt` i `dane.csv`.\n\n### 1. Zmień nazwę pliku\n\n```bash\ngit mv stary.txt nowy.txt\n```\n\nTo przenosi plik w katalogu roboczym i przygotowuje zmianę w poczekalni.\n\n### 2. Usuń niepotrzebny plik\n\n```bash\ngit rm dane.csv\n```\n\nTo usuwa plik z katalogu roboczego i z poczekalni.\n\n### 3. Sprawdź stan\n\n```bash\ngit status\n```\n\nZobaczysz przygotowaną zmianę nazwy (`nowy.txt`) oraz usunięcie `dane.csv`.\n\n### 4. Zatwierdź zmiany\n\n```bash\ngit commit -m \"Uporządkuj pliki projektu\"\n```\n\n### 5. Sprawdź efekt\n\n```bash\ngit ls-files\ngit log --oneline\n```\n\n> Zwykłe `mv` i `rm` w terminalu też działają, ale wtedy musisz pamiętać o osobnym `git add`. `git mv` i `git rm` robią obie rzeczy naraz.",
+  "initialFiles": {
+    "README.md": "# Projekt\n",
+    "stary.txt": "Stara notatka\n",
+    "dane.csv": "id,nazwa\n1,przykład\n"
+  },
+  "setupCommands": [
+    "git init",
+    "git add .",
+    "git commit -m \"Dodaj pliki projektu\""
+  ],
+  "tasks": [
+    {
+      "label": "Wykonano git mv stary.txt nowy.txt",
+      "check": { "type": "commandUsed", "pattern": "/^git mv stary\\.txt nowy\\.txt/" }
+    },
+    {
+      "label": "Wykonano git rm dane.csv",
+      "check": { "type": "commandUsed", "pattern": "/^git rm dane\\.csv/" }
+    },
+    {
+      "label": "Plik nowy.txt istnieje w katalogu roboczym",
+      "check": { "type": "fileExists", "path": "nowy.txt" }
+    },
+    {
+      "label": "Plik stary.txt nie istnieje już w katalogu roboczym",
+      "check": { "not": { "type": "fileExists", "path": "stary.txt" } }
+    },
+    {
+      "label": "Plik dane.csv nie istnieje już w katalogu roboczym",
+      "check": { "not": { "type": "fileExists", "path": "dane.csv" } }
+    },
+    {
+      "label": "W ostatnim commicie jest nowy.txt",
+      "check": { "type": "commitHasFile", "path": "nowy.txt" }
+    },
+    {
+      "label": "W ostatnim commicie nie ma stary.txt ani dane.csv",
+      "check": [
+        { "not": { "type": "commitHasFile", "path": "stary.txt" } },
+        { "not": { "type": "commitHasFile", "path": "dane.csv" } }
+      ]
+    },
+    {
+      "label": "Historia zawiera dwa commity",
+      "check": { "type": "commitCount", "exact": 2 }
+    },
+    {
+      "label": "Ostatni commit opisuje porządki",
+      "check": { "type": "commitMessage", "pattern": "/porządk|uporząd|usuń|przenieś/i", "last": true }
+    },
+    {
+      "label": "Drzewo robocze jest czyste",
+      "check": { "type": "clean" }
+    }
+  ],
+  "hints": [
+    "Zmień nazwę pliku: `git mv stary.txt nowy.txt`.",
+    "Usuń plik: `git rm dane.csv`.",
+    "Sprawdź poczekalnię: `git status` — zobaczysz zmianę nazwy i usunięcie.",
+    "Zatwierdź: `git commit -m \"Uporządkuj pliki projektu\"`.",
+    "Lista śledzonych plików: `git ls-files`. Powinny zostać `README.md` i `nowy.txt`."
+  ]
+}

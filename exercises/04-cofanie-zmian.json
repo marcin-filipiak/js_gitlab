@@ -1,0 +1,61 @@
+{
+  "id": "04-cofanie-zmian",
+  "title": "Cofanie zmian",
+  "level": "Podstawy",
+  "estimatedMinutes": 12,
+  "summary": "Przywróć zmodyfikowany plik przez git restore i usuń plik z poczekalni przez git restore --staged.",
+  "description": "## Cel ćwiczenia\n\nNauczysz się cofać zmiany na dwa sposoby: w katalogu roboczym oraz w poczekalni.\n\n### 1. Zmodyfikuj plik i przywróć go\n\nOtwórz `README.md` w zakładce **Pliki** i dopisz linię:\n\n```text\nTO JEST BŁĄD\n```\n\nSprawdź zmiany:\n\n```bash\ngit status\ngit diff\n```\n\nTeraz cofnij zmianę w katalogu roboczym:\n\n```bash\ngit restore README.md\n```\n\nPlik wróci do wersji z ostatniego commita. Uwaga: ta operacja **bezpowrotnie usuwa** niezatwierdzone zmiany w pliku.\n\n### 2. Przygotuj plik i usuń go z poczekalni\n\nUtwórz nowy plik `notes.txt` (np. w zakładce **Pliki**) z treścią:\n\n```text\nMój brudnopis\n```\n\nDodaj go do poczekalni, a następnie wycofaj samo dodanie:\n\n```bash\ngit add notes.txt\ngit restore --staged notes.txt\n```\n\nPo tej operacji `notes.txt` nadal istnieje na dysku, ale Git znów widzi go jako **nieśledzony**. To różnica między `git restore` (katalog roboczy) a `git restore --staged` (poczekalnia).\n\n### 3. Sprawdź stan\n\n```bash\ngit status\n```",
+  "initialFiles": {
+    "README.md": "# Notatki projektu\n\nWażne informacje o projekcie.\n",
+    "app.js": "console.log('start');\n"
+  },
+  "setupCommands": [
+    "git init",
+    "git add .",
+    "git commit -m \"Wersja startowa\""
+  ],
+  "tasks": [
+    {
+      "label": "Wyświetlono stan repozytorium komendą git status",
+      "check": { "type": "commandUsed", "pattern": "/^git status/" }
+    },
+    {
+      "label": "Przywrócono README.md komendą git restore README.md",
+      "check": { "type": "commandUsed", "pattern": "/^git restore README\\.md/" }
+    },
+    {
+      "label": "README.md nie zawiera już tekstu „TO JEST BŁĄD”",
+      "check": [
+        { "type": "fileContent", "path": "README.md", "contains": "Notatki projektu" },
+        { "type": "fileContent", "path": "README.md", "notContains": "TO JEST BŁĄD" }
+      ]
+    },
+    {
+      "label": "Utworzono plik notes.txt",
+      "check": { "type": "fileExists", "path": "notes.txt" }
+    },
+    {
+      "label": "Plik notes.txt został dodany do poczekalni",
+      "check": { "type": "commandUsed", "pattern": "/^git add notes\\.txt/" }
+    },
+    {
+      "label": "Plik notes.txt został wycofany z poczekalni",
+      "check": { "not": { "type": "staged", "path": "notes.txt" } }
+    },
+    {
+      "label": "Zmiany w plikach śledzonych są cofnięte",
+      "check": [{ "type": "clean", "includeUntracked": false }]
+    },
+    {
+      "label": "README.md nie ma niezatwierdzonych zmian",
+      "check": { "not": { "type": "unstaged", "path": "README.md" } }
+    }
+  ],
+  "hints": [
+    "Najpierw otwórz `README.md` w zakładce **Pliki** i dopisz linię `TO JEST BŁĄD`.",
+    "`git status` pokaże plik jako zmodyfikowany, a `git diff` pokaże dokładnie dodaną linię.",
+    "Cofnij zmianę: `git restore README.md`. Plik wróci do treści z commita.",
+    "Utwórz `notes.txt` i dodaj go: `git add notes.txt`. Następnie wpisz `git restore --staged notes.txt` — plik pozostanie na dysku, ale zniknie z poczekalni.",
+    "Na końcu `git status` pokaże `notes.txt` jako plik nieśledzony, a pliki śledzone jako czyste."
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "12-tagi",
+  "title": "Tagi wersji",
+  "level": "Podstawy",
+  "estimatedMinutes": 8,
+  "summary": "Oznacz dwa commity tagami v0.9 i v1.0, aby zapamiętać ważne wersje projektu.",
+  "description": "## Cel ćwiczenia\n\nTagi to trwałe etykiety wskazujące na konkretne commity. Najczęściej używa się ich do oznaczania wersji wydań, np. `v1.0.0`.\n\nW historii są dwa commity:\n\n1. `Wersja 0.9` — starszy commit,\n2. `Wersja 1.0` — najnowszy commit (HEAD).\n\n### 1. Oznacz starszą wersję\n\n```bash\ngit tag v0.9 HEAD~1\n```\n\n`HEAD~1` wskazuje commit rodzica, czyli `Wersja 0.9`.\n\n### 2. Oznacz bieżącą wersję\n\n```bash\ngit tag v1.0\n```\n\nBez podania commita `git tag` użyje `HEAD`.\n\n### 3. Sprawdź tagi\n\n```bash\ngit tag\ngit log --oneline\n```\n\nW `git log` przy commitach pojawią się etykiety `tag: v0.9` i `tag: v1.0`.\n\n### 4. Sprawdź wskazania\n\n```bash\ngit show v0.9\ngit show v1.0\n```\n\n> W tym ćwiczeniu tworzymy lekkie tagi. W prawdziwym Git istnieją też tagi anotowane (`git tag -a v1.0 -m \"Wersja 1.0\"`), które przechowują dodatkowe informacje, np. autora i datę.",
+  "initialFiles": {
+    "version.txt": "0.9\n"
+  },
+  "setupCommands": [
+    "git init",
+    "echo \"0.9\" > version.txt",
+    "git add version.txt",
+    "git commit -m \"Wersja 0.9\"",
+    "echo \"1.0\" > version.txt",
+    "git add version.txt",
+    "git commit -m \"Wersja 1.0\""
+  ],
+  "tasks": [
+    {
+      "label": "Utworzono tag v0.9 na starszym commicie",
+      "check": [
+        { "type": "tagExists", "name": "v0.9" },
+        { "type": "tagAt", "name": "v0.9", "ref": "HEAD~1" }
+      ]
+    },
+    {
+      "label": "Utworzono tag v1.0 na najnowszym commicie",
+      "check": [
+        { "type": "tagExists", "name": "v1.0" },
+        { "type": "tagAt", "name": "v1.0", "ref": "HEAD" }
+      ]
+    },
+    {
+      "label": "Użyto komendy git tag co najmniej dwa razy",
+      "check": { "type": "commandUsed", "pattern": "/^git tag/", "min": 2 }
+    },
+    {
+      "label": "Historia nadal zawiera dwa commity",
+      "check": { "type": "commitCount", "exact": 2 }
+    },
+    {
+      "label": "Drzewo robocze jest czyste",
+      "check": { "type": "clean" }
+    }
+  ],
+  "hints": [
+    "Najpierw oznacz starszy commit: `git tag v0.9 HEAD~1`.",
+    "Następnie oznacz bieżący commit: `git tag v1.0` (domyślnie wskazuje HEAD).",
+    "Listę tagów wyświetlisz przez `git tag`.",
+    "`git log --oneline` pokaże tagi przy odpowiednich commitach.",
+    "Możesz sprawdzić wskazanie tagu przez `git show v0.9` lub `git show v1.0`."
+  ]
+}

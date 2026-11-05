@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Git Lab — interaktywna piaskownica do nauki obsługi repozytorium Git">
+  <title>Git Lab — nauka Git w praktyce</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">git</span>
+        <div class="brand-text">
+          <strong>Git Lab</strong>
+          <small>interaktywna piaskownica</small>
+        </div>
+      </div>
+
+      <div class="topbar-progress">
+        <div class="progress-label">
+          <span><strong id="progress-text">0 / 0</strong> ukończonych ćwiczeń</span>
+          <span id="progress-percent">0%</span>
+        </div>
+        <div class="progress-track"><span id="progress-bar"></span></div>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="btn btn-ghost" id="reset-exercise" type="button" title="Przywróć ćwiczenie do stanu początkowego">
+          <span aria-hidden="true">↺</span> Resetuj
+        </button>
+        <button class="btn btn-ghost icon-btn" id="theme-toggle" type="button" title="Przełącz motyw" aria-label="Przełącz motyw">
+          <span id="theme-icon" aria-hidden="true">☾</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-head">
+          <span>Ćwiczenia</span>
+          <span class="pill" id="exercise-count">0</span>
+        </div>
+        <nav id="exercise-list" class="exercise-list" aria-label="Lista ćwiczeń"></nav>
+        <div class="sidebar-foot">
+          <p>Chcesz dodać własne ćwiczenie?</p>
+          <p>Utwórz plik JSON w katalogu <code>exercises/</code> i dopisz go do <code>index.json</code>.</p>
+        </div>
+      </aside>
+
+      <section id="brief-panel" class="brief" aria-label="Treść ćwiczenia">
+        <div class="skeleton-stack">
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+        </div>
+      </section>
+
+      <section class="playground" aria-label="Piaskownica Git">
+        <div class="tabs">
+          <div class="tabs-list" role="tablist" aria-label="Widoki piaskownicy">
+            <button class="tab is-active" data-tab="terminal" role="tab" aria-selected="true" type="button">Terminal</button>
+            <button class="tab" data-tab="files" role="tab" aria-selected="false" type="button">
+              Pliki <span class="pill" id="files-count">0</span>
+            </button>
+            <button class="tab" data-tab="history" role="tab" aria-selected="false" type="button">Historia</button>
+          </div>
+          <div class="repo-status" id="repo-status" aria-live="polite"></div>
+        </div>
+
+        <div class="panels">
+          <div class="panel-view is-active" id="view-terminal" role="tabpanel" aria-label="Terminal"></div>
+
+          <div class="panel-view" id="view-files" role="tabpanel" aria-label="Pliki">
+            <div class="panel-toolbar">
+              <button class="btn btn-primary btn-small" id="new-file" type="button">+ Nowy plik</button>
+              <span class="toolbar-note">Kliknij plik, aby go edytować.</span>
+            </div>
+            <div class="files-list" id="files-list"></div>
+          </div>
+
+          <div class="panel-view" id="view-history" role="tabpanel" aria-label="Historia">
+            <div class="panel-toolbar">
+              <span class="toolbar-note" id="history-note">Historia commitów pojawi się po pierwszym zatwierdzeniu.</span>
+            </div>
+            <div class="history-list" id="history-list"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div id="modal-root"></div>
+  <div id="toast-root" class="toast-root" aria-live="polite"></div>
+
+  <div id="loading" class="loading-overlay">
+    <div class="loading-box">
+      <span class="spinner" aria-hidden="true"></span>
+      <p>Ładowanie ćwiczeń…</p>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

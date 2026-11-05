@@ -1,0 +1,53 @@
+{
+  "id": "05-poprawka-commita",
+  "title": "Poprawka ostatniego commita",
+  "level": "Podstawy",
+  "estimatedMinutes": 10,
+  "summary": "Dodaj brakujący plik do ostatniego commita i zmień jego komunikat przez git commit --amend.",
+  "description": "## Cel ćwiczenia\n\nKażdy popełnia błędy: zapomnisz dodać plik albo zrobisz literówkę w komunikacie. Zamiast tworzyć nowy commit „poprawka”, możesz zmienić **ostatni** commit przez `--amend`.\n\n### 1. Zobacz obecny stan\n\n```bash\ngit log --oneline\ngit status\n```\n\nW historii jest jeden commit o komunikacie `pierwszy komit`. W repozytorium brakuje pliku `LICENSE`.\n\n### 2. Utwórz brakujący plik\n\nW zakładce **Pliki** utwórz `LICENSE` z treścią:\n\n```text\nMIT License\n```\n\n### 3. Dodaj plik do poczekalni\n\n```bash\ngit add LICENSE\n```\n\n### 4. Popraw ostatni commit\n\n```bash\ngit commit --amend -m \"Pierwszy commit: README i licencja\"\n```\n\nPo tej operacji nadal istnieje **jeden** commit, ale zawiera już `LICENSE` i ma nowy komunikat. Poprzednia wersja commita staje się nieosiągalna z historii.\n\n### 5. Sprawdź efekt\n\n```bash\ngit log --oneline\ngit show HEAD\n```\n\n> `--amend` zmienia historię. Nie używaj go do commitów, które zostały już wypchnięte do współdzielonego repozytorium.",
+  "initialFiles": {
+    "README.md": "# Projekt\n\nOpis projektu.\n"
+  },
+  "setupCommands": [
+    "git init",
+    "git add README.md",
+    "git commit -m \"pierwszy komit\""
+  ],
+  "tasks": [
+    {
+      "label": "Plik LICENSE istnieje w katalogu roboczym",
+      "check": { "type": "fileExists", "path": "LICENSE" }
+    },
+    {
+      "label": "Plik LICENSE znajduje się w ostatnim commicie",
+      "check": { "type": "commitHasFile", "path": "LICENSE" }
+    },
+    {
+      "label": "README.md nadal znajduje się w ostatnim commicie",
+      "check": { "type": "commitHasFile", "path": "README.md" }
+    },
+    {
+      "label": "W historii nadal jest tylko jeden commit",
+      "check": { "type": "commitCount", "exact": 1 }
+    },
+    {
+      "label": "Nowy komunikat commita zawiera słowo „licencj”, „README” lub „popraw”",
+      "check": { "type": "commitMessage", "pattern": "/licencj|readme|popraw/i", "last": true }
+    },
+    {
+      "label": "Użyto komendy git commit --amend",
+      "check": { "type": "commandUsed", "pattern": "/^git commit --amend/" }
+    },
+    {
+      "label": "Drzewo robocze jest czyste",
+      "check": { "type": "clean" }
+    }
+  ],
+  "hints": [
+    "Najpierw sprawdź historię: `git log --oneline` — zobaczysz jeden commit.",
+    "Utwórz plik `LICENSE` w zakładce **Pliki** i dodaj go do poczekalni: `git add LICENSE`.",
+    "Popraw ostatni commit razem z komunikatem: `git commit --amend -m \"Pierwszy commit: README i licencja\"`.",
+    "`git log --oneline` powinien nadal pokazywać tylko jeden commit, ale `git show HEAD` będzie zawierać plik LICENSE.",
+    "`git status` powinien być czysty."
+  ]
+}

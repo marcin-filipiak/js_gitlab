@@ -1,0 +1,59 @@
+{
+  "id": "02-status-i-dodawanie",
+  "title": "Status i selektywne dodawanie",
+  "level": "Podstawy",
+  "estimatedMinutes": 12,
+  "summary": "Sprawdź stan repozytorium przez git status i zatwierdź dwa pliki w dwóch osobnych commitach.",
+  "description": "## Cel ćwiczenia\n\nNauczysz się czytać wynik `git status` i dodawać do poczekalni tylko wybrane pliki.\n\nW repozytorium są już trzy pliki: `README.md` (zatwierdzony) oraz `index.html` i `style.css` (nieśledzone). Twoim zadaniem jest zapisać je w **dwóch osobnych commitach**.\n\n### 1. Sprawdź stan\n\n```bash\ngit status\n```\n\nZobaczysz pliki nieśledzone oraz informację, że `README.md` jest już zatwierdzony.\n\n### 2. Zatwierdź tylko index.html\n\n```bash\ngit add index.html\ngit commit -m \"Dodaj stronę index.html\"\n```\n\n### 3. Zatwierdź style.css\n\n```bash\ngit add style.css\ngit commit -m \"Dodaj style CSS\"\n```\n\n### 4. Sprawdź efekt\n\n```bash\ngit status\ngit log --oneline\n```\n\n> `git add .` dodałby **wszystkie** zmiany naraz. W tym ćwiczeniu chodzi o świadome wybieranie plików — nie używaj `git add .` przy pierwszym commicie.",
+  "initialFiles": {
+    "README.md": "# Mój projekt\n\nProsta strona demonstracyjna.\n",
+    "index.html": "<!doctype html>\n<html lang=\"pl\">\n<head><title>Moja strona</title></head>\n<body><h1>Witaj!</h1></body>\n</html>\n",
+    "style.css": "body {\n  margin: 0;\n  font-family: sans-serif;\n}\n"
+  },
+  "setupCommands": [
+    "git init",
+    "git add README.md",
+    "git commit -m \"Dodaj README\""
+  ],
+  "tasks": [
+    {
+      "label": "Repozytorium Git jest zainicjalizowane",
+      "check": { "type": "initialized" }
+    },
+    {
+      "label": "Wyświetlono stan repozytorium komendą git status",
+      "check": { "type": "commandUsed", "pattern": "/^git status/" }
+    },
+    {
+      "label": "Plik index.html został zatwierdzony w osobnym commicie",
+      "check": { "type": "commitHasFile", "path": "index.html", "ref": "HEAD~1" }
+    },
+    {
+      "label": "Plik style.css został zatwierdzony w drugim commicie",
+      "check": { "type": "commitHasFile", "path": "style.css", "ref": "HEAD" }
+    },
+    {
+      "label": "Łącznie są trzy commity: README, index.html i style.css",
+      "check": { "type": "commitCount", "exact": 3 }
+    },
+    {
+      "label": "Komunikat commita ze stroną zawiera słowo „stron”, „index” lub „html”",
+      "check": { "type": "commitMessage", "pattern": "/stron|index|html/i", "last": false }
+    },
+    {
+      "label": "Komunikat commita ze stylami zawiera słowo „style”, „css” lub „wygląd”",
+      "check": { "type": "commitMessage", "pattern": "/style|css|wygląd/i", "last": true }
+    },
+    {
+      "label": "Drzewo robocze jest czyste",
+      "check": { "type": "clean" }
+    }
+  ],
+  "hints": [
+    "`git status` pokaże dwa pliki nieśledzone: `index.html` i `style.css`.",
+    "Dodaj tylko jeden plik: `git add index.html`. Potem sprawdź `git status` — `style.css` nadal powinien być nieśledzony.",
+    "Zatwierdź pierwszy plik: `git commit -m \"Dodaj stronę index.html\"`.",
+    "Teraz dodaj i zatwierdź drugi plik: `git add style.css` oraz `git commit -m \"Dodaj style CSS\"`.",
+    "Na końcu `git status` powinien pokazać czyste drzewo robocze."
+  ]
+}

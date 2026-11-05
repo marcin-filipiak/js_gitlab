@@ -1,0 +1,60 @@
+{
+  "id": "11-reset",
+  "title": "Cofanie commitów (reset)",
+  "level": "Średniozaawansowany",
+  "estimatedMinutes": 12,
+  "summary": "Usuń ostatni commit i przywróć pliki do poprzedniej wersji przez git reset --hard HEAD~1.",
+  "description": "## Cel ćwiczenia\n\n`git reset` przesuwa wskaźnik gałęzi. W trybie `--hard` przywraca też poczekalnię i katalog roboczy do wybranego commita. To przydatne, gdy ostatni commit był błędny i **nie został jeszcze wypchnięty**.\n\nW historii są dwa commity:\n\n1. `Wersja 1` — plik `app.js` zawiera `wersja 1`,\n2. `Wersja 2` — plik `app.js` zawiera `wersja 2`.\n\n### 1. Sprawdź historię\n\n```bash\ngit log --oneline\ngit show HEAD\n```\n\n### 2. Cofnij ostatni commit\n\n```bash\ngit reset --hard HEAD~1\n```\n\n`HEAD~1` oznacza „rodzic obecnego commita”, czyli pierwszy commit. Po resecie:\n\n- gałąź `main` wskaże pierwszy commit,\n- poczekalnia i pliki wrócą do wersji 1,\n- commit `Wersja 2` zniknie z osiągalnej historii.\n\n### 3. Sprawdź efekt\n\n```bash\ngit log --oneline\ncat app.js\ngit status\n```\n\n> `--hard` usuwa niezatwierdzone zmiany. Jeśli chcesz zachować pliki, użyj `--soft` lub `--mixed`. Nie cofaj w ten sposób commitów, które zdążyły trafić do zdalnego repozytorium.",
+  "initialFiles": {
+    "app.js": "wersja 1\n"
+  },
+  "setupCommands": [
+    "git init",
+    "echo \"wersja 1\" > app.js",
+    "git add app.js",
+    "git commit -m \"Wersja 1\"",
+    "echo \"wersja 2\" > app.js",
+    "git add app.js",
+    "git commit -m \"Wersja 2\""
+  ],
+  "tasks": [
+    {
+      "label": "Wykonano git reset --hard HEAD~1",
+      "check": { "type": "commandUsed", "pattern": "/^git reset --hard HEAD~1/" }
+    },
+    {
+      "label": "Historia zawiera teraz tylko jeden commit",
+      "check": { "type": "commitCount", "exact": 1 }
+    },
+    {
+      "label": "Ostatnim commitem jest „Wersja 1”",
+      "check": { "type": "commitMessage", "pattern": "/wersja 1/i", "last": true }
+    },
+    {
+      "label": "Commit „Wersja 2” nie jest już osiągalny z HEAD",
+      "check": { "not": { "type": "commitMessage", "pattern": "/wersja 2/i", "last": false } }
+    },
+    {
+      "label": "Plik app.js zawiera wersję 1",
+      "check": [
+        { "type": "fileContent", "path": "app.js", "contains": "wersja 1" },
+        { "type": "fileContent", "path": "app.js", "notContains": "wersja 2" }
+      ]
+    },
+    {
+      "label": "Wyświetlono historię po resecie",
+      "check": { "type": "commandUsed", "pattern": "/^git log/" }
+    },
+    {
+      "label": "Drzewo robocze jest czyste",
+      "check": { "type": "clean" }
+    }
+  ],
+  "hints": [
+    "Zobacz obecną historię: `git log --oneline` — są dwa commity, a HEAD wskazuje `Wersja 2`.",
+    "Cofnij ostatni commit: `git reset --hard HEAD~1`.",
+    "Sprawdź historię: `git log --oneline` — powinien zostać tylko commit `Wersja 1`.",
+    "`cat app.js` pokaże `wersja 1`, a `git status` czyste drzewo robocze.",
+    "Pamiętaj: `--hard` bezpowrotnie usuwa niezatwierdzone zmiany."
+  ]
+}

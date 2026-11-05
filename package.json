@@ -1,0 +1,10 @@
+{
+  "name": "git-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Interaktywna aplikacja webowa do nauki obsługi repozytorium Git",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "exercises": [
+    "01-pierwszy-commit.json",
+    "02-status-i-dodawanie.json",
+    "03-historia-i-diff.json",
+    "04-cofanie-zmian.json",
+    "05-poprawka-commita.json",
+    "06-galezie.json",
+    "07-scalanie-fast-forward.json",
+    "08-konflikty.json",
+    "09-gitignore.json",
+    "10-rm-i-mv.json",
+    "11-reset.json",
+    "12-tagi.json",
+    "13-zdalne-repozytorium.json"
+  ]
+}

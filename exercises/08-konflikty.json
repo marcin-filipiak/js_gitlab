@@ -1,0 +1,71 @@
+{
+  "id": "08-konflikty",
+  "title": "Rozwiązywanie konfliktów",
+  "level": "Średniozaawansowany",
+  "estimatedMinutes": 18,
+  "summary": "Wywołaj konflikt scalania, popraw plik z znacznikami konfliktu i zakończ scalanie commitem.",
+  "description": "## Cel ćwiczenia\n\nGdy dwie gałęzie zmieniają tę samą linię pliku, Git nie potrafi sam zdecydować, która wersja jest właściwa. Zgłasza **konflikt scalania** i zostawia znaczniki w pliku.\n\n### 1. Wywołaj konflikt\n\nJesteś na gałęzi `main`. Gałąź `feature` zmienia ten sam plik `README.md` w inny sposób. Uruchom:\n\n```bash\ngit merge feature\n```\n\nGit przerwie scalanie i wypisze plik ze konfliktem.\n\n### 2. Zobacz stan konfliktu\n\n```bash\ngit status\ncat README.md\n```\n\nW pliku znajdziesz znaczniki:\n\n```text\n<<<<<<< HEAD\nwersja z main\n=======\nwersja z feature\n>>>>>>> feature\n```\n\n### 3. Rozwiąż konflikt\n\nOtwórz `README.md` w zakładce **Pliki** i usuń znaczniki. Zostaw wybraną treść, na przykład:\n\n```text\nWersja po scaleniu: main i feature.\n```\n\nNastępnie powiedz Gitowi, że konflikt jest rozwiązany:\n\n```bash\ngit add README.md\n```\n\n### 4. Zakończ scalanie\n\n```bash\ngit commit -m \"Scal gałąź feature i rozwiąż konflikt\"\n```\n\n### 5. Sprawdź historię\n\n```bash\ngit log --oneline --graph\ngit status\n```\n\n> Gdybyś chciał przerwać scalanie bez tworzenia commita, użyj `git merge --abort`.",
+  "initialFiles": {
+    "README.md": "# Projekt\n"
+  },
+  "setupCommands": [
+    "git init",
+    "echo \"Wersja bazowa\" > README.md",
+    "git add README.md",
+    "git commit -m \"Wersja bazowa\"",
+    "git branch feature",
+    "git switch feature",
+    "echo \"Wersja z gałęzi feature\" > README.md",
+    "git add README.md",
+    "git commit -m \"Zmiana w feature\"",
+    "git switch main",
+    "echo \"Wersja z gałęzi main\" > README.md",
+    "git add README.md",
+    "git commit -m \"Zmiana w main\""
+  ],
+  "tasks": [
+    {
+      "label": "Wywołano scalanie komendą git merge feature",
+      "check": { "type": "commandUsed", "pattern": "/^git merge feature/" }
+    },
+    {
+      "label": "Powstał commit scalający",
+      "check": { "type": "mergeCommit" }
+    },
+    {
+      "label": "W pliku README.md nie ma już znaczników konfliktu",
+      "check": [
+        { "type": "fileContent", "path": "README.md", "notContains": "<<<<<<<" },
+        { "type": "fileContent", "path": "README.md", "notContains": ">>>>>>>" }
+      ]
+    },
+    {
+      "label": "Rozwiązany plik został dodany do poczekalni",
+      "check": { "type": "commandUsed", "pattern": "/^git add (README\\.md|\\.)/" }
+    },
+    {
+      "label": "Scalenie zakończono commitem",
+      "check": { "type": "commitMessage", "pattern": "/scal|merge|konflikt/i", "last": true }
+    },
+    {
+      "label": "Historia zawiera cztery commity: bazę, dwie zmiany i scalenie",
+      "check": { "type": "commitCount", "exact": 4 }
+    },
+    {
+      "label": "Aktywna jest gałąź main",
+      "check": { "type": "currentBranch", "name": "main" }
+    },
+    {
+      "label": "Drzewo robocze jest czyste",
+      "check": { "type": "clean" }
+    }
+  ],
+  "hints": [
+    "Upewnij się, że jesteś na `main`, i uruchom `git merge feature`.",
+    "Git przerwie scalanie. `git status` pokaże konflikt, a `cat README.md` — znaczniki `<<<<<<<`, `=======` i `>>>>>>>`.",
+    "Otwórz `README.md` w zakładce **Pliki**, usuń wszystkie znaczniki i zostaw jedną, sensowną treść.",
+    "Dodaj rozwiązany plik: `git add README.md`. Konflikt zniknie ze statusu.",
+    "Zakończ scalanie: `git commit -m \"Scal gałąź feature i rozwiąż konflikt\"`. To utworzy commit z dwoma rodzicami.",
+    "`git log --oneline --graph` pokaże rozgałęzienie i commit scalający."
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "id": "06-galezie",
+  "title": "Gałęzie",
+  "level": "Podstawy",
+  "estimatedMinutes": 14,
+  "summary": "Utwórz gałąź feature, zapisz na niej commit i wróć na gałąź main.",
+  "description": "## Cel ćwiczenia\n\nGałąź to niezależna linia rozwoju. Dzięki niej możesz pracować nad funkcją, nie zmieniając głównej wersji projektu.\n\n### 1. Utwórz gałąź\n\n```bash\ngit branch feature\n```\n\n`git branch feature` tworzy nową gałąź wskazującą na bieżący commit, ale **nie przełącza** na nią.\n\n### 2. Przełącz się na gałąź\n\n```bash\ngit switch feature\n```\n\nSprawdź, gdzie jesteś:\n\n```bash\ngit branch\n```\n\n### 3. Wykonaj commit na gałęzi feature\n\nUtwórz plik `feature.txt` z treścią:\n\n```text\nNowa funkcja\n```\n\nNastępnie:\n\n```bash\ngit add feature.txt\ngit commit -m \"Dodaj funkcję\"\n```\n\n### 4. Wróć na main\n\n```bash\ngit switch main\n```\n\nPo powrocie plik `feature.txt` zniknie z katalogu roboczego — istnieje tylko na gałęzi `feature`. Zobacz to w historii:\n\n```bash\ngit log --oneline --all\ngit branch\n```\n\n> Gałęzie w Git są lekkie: to tylko wskaźniki na commity. Samo utworzenie gałęzi nie kopiuje plików.",
+  "initialFiles": {
+    "app.js": "console.log('aplikacja działa');\n"
+  },
+  "setupCommands": [
+    "git init",
+    "git add app.js",
+    "git commit -m \"Dodaj app.js\""
+  ],
+  "tasks": [
+    {
+      "label": "Utworzono gałąź feature komendą git branch",
+      "check": [
+        { "type": "branchExists", "name": "feature", "requireCommit": true },
+        { "type": "commandUsed", "pattern": "/^git branch feature/" }
+      ]
+    },
+    {
+      "label": "Przełączono się na gałąź feature",
+      "check": { "type": "commandUsed", "pattern": "/^git (switch|checkout) feature/" }
+    },
+    {
+      "label": "Na gałęzi feature są dwa commity",
+      "check": { "type": "commitCount", "ref": "feature", "exact": 2 }
+    },
+    {
+      "label": "Plik feature.txt znajduje się na gałęzi feature",
+      "check": { "type": "commitHasFile", "path": "feature.txt", "ref": "feature" }
+    },
+    {
+      "label": "Na gałęzi main nie ma pliku feature.txt",
+      "check": { "not": { "type": "commitHasFile", "path": "feature.txt" } }
+    },
+    {
+      "label": "Na końcu aktywna jest gałąź main",
+      "check": [
+        { "type": "currentBranch", "name": "main" },
+        { "type": "commandUsed", "pattern": "/^git (switch|checkout) main/" }
+      ]
+    },
+    {
+      "label": "Drzewo robocze jest czyste",
+      "check": { "type": "clean" }
+    }
+  ],
+  "hints": [
+    "Utwórz gałąź: `git branch feature`. Sprawdź listę gałęzi przez `git branch` — gwiazdka oznacza bieżącą.",
+    "Przełącz się: `git switch feature`.",
+    "Utwórz plik `feature.txt` w zakładce **Pliki**, dodaj go przez `git add feature.txt` i zatwierdź: `git commit -m \"Dodaj funkcję\"`.",
+    "Wróć na główną gałąź: `git switch main`. Plik `feature.txt` zniknie z katalogu roboczego.",
+    "Historię wszystkich gałęzi zobaczysz przez `git log --oneline --all`."
+  ]
+}

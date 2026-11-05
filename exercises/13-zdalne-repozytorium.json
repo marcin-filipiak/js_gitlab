@@ -1,0 +1,76 @@
+{
+  "id": "13-zdalne-repozytorium",
+  "title": "Zdalne repozytorium",
+  "level": "Średniozaawansowany",
+  "estimatedMinutes": 18,
+  "summary": "Pobierz brakujące zmiany z origin przez git pull, dodaj commit i wypchnij go przez git push.",
+  "description": "## Cel ćwiczenia\n\nW codziennej pracy korzystasz ze zdalnego repozytorium (np. GitHub, GitLab). Podstawowy cykl wygląda tak: **pobierz zmiany → pracuj → wypchnij zmiany**.\n\nTo ćwiczenie ma skonfigurowane zdalne repozytorium `origin` pod adresem `https://example.com/projekt.git`. Zdalna gałąź `main` jest o jeden commit przed Twoją lokalną kopią — brakuje w niej pliku `HISTORY.md`.\n\n### 1. Sprawdź zdalne repozytorium\n\n```bash\ngit remote -v\ngit status\ngit log --oneline\n```\n\n### 2. Pobierz zmiany\n\n```bash\ngit pull\n```\n\nPonieważ lokalna gałąź nie ma własnych nowych commitów, Git wykona szybkie przewijanie i doda plik `HISTORY.md`.\n\n### 3. Dodaj własną zmianę\n\nW zakładce **Pliki** utwórz `CHANGELOG.md` z treścią:\n\n```text\n# Zmiany\n\n- Pierwsze wydanie\n```\n\nNastępnie zatwierdź plik:\n\n```bash\ngit add CHANGELOG.md\ngit commit -m \"Dodaj CHANGELOG\"\n```\n\n### 4. Wypchnij zmiany\n\n```bash\ngit push\n```\n\nTeraz zdalna gałąź `origin/main` wskazuje na ten sam commit co lokalna `main`.\n\n### 5. Sprawdź stan\n\n```bash\ngit status\ngit log --oneline\ngit remote show origin\n```\n\n> `git fetch` pobiera informacje o zdalnych zmianach, ale **nie zmienia** plików. `git pull` robi `fetch` i od razu scala zmiany. `git push` wysyła lokalne commity do zdalnego repozytorium.",
+  "initialFiles": {
+    "README.md": "# Projekt\n"
+  },
+  "setupCommands": [
+    "git init",
+    "echo \"# Projekt\" > README.md",
+    "git add README.md",
+    "git commit -m \"Pierwszy commit\"",
+    "echo \"## Historia zmian\" > HISTORY.md",
+    "git add HISTORY.md",
+    "git commit -m \"Dodaj historię zmian\"",
+    "git remote add origin https://example.com/projekt.git",
+    "git push -u origin main",
+    "git reset --hard HEAD~1"
+  ],
+  "tasks": [
+    {
+      "label": "Zdalne repozytorium origin istnieje",
+      "check": {
+        "type": "remoteExists",
+        "name": "origin",
+        "urlContains": "example.com"
+      }
+    },
+    {
+      "label": "Sprawdzono konfigurację zdalnego repozytorium",
+      "check": { "type": "commandUsed", "pattern": "/^git remote/" }
+    },
+    {
+      "label": "Wykonano git pull",
+      "check": { "type": "commandUsed", "pattern": "/^git pull/" }
+    },
+    {
+      "label": "Plik HISTORY.md został pobrany ze zdalnego repozytorium",
+      "check": { "type": "fileExists", "path": "HISTORY.md" }
+    },
+    {
+      "label": "Utworzono i zatwierdzono plik CHANGELOG.md",
+      "check": [
+        { "type": "fileExists", "path": "CHANGELOG.md" },
+        { "type": "commitHasFile", "path": "CHANGELOG.md" }
+      ]
+    },
+    {
+      "label": "Historia zawiera teraz trzy commity",
+      "check": { "type": "commitCount", "exact": 3 }
+    },
+    {
+      "label": "Wykonano git push",
+      "check": { "type": "commandUsed", "pattern": "/^git push/" }
+    },
+    {
+      "label": "Zdalna gałąź origin/main wskazuje na lokalny HEAD",
+      "check": { "type": "remoteBranchAt", "remote": "origin", "branch": "main", "ref": "HEAD" }
+    },
+    {
+      "label": "Drzewo robocze jest czyste",
+      "check": { "type": "clean" }
+    }
+  ],
+  "hints": [
+    "Zacznij od `git remote -v` — zobaczysz adres `origin`. `git log --oneline` pokaże tylko jeden lokalny commit.",
+    "Pobierz brakujące zmiany: `git pull`. Plik `HISTORY.md` powinien pojawić się w katalogu roboczym.",
+    "Utwórz `CHANGELOG.md` w zakładce **Pliki** i dodaj go: `git add CHANGELOG.md`.",
+    "Zatwierdź: `git commit -m \"Dodaj CHANGELOG\"`.",
+    "Wyślij commit do zdalnego repozytorium: `git push`.",
+    "Sprawdź stan przez `git status`, `git log --oneline` i `git remote show origin` — zdalna gałąź main powinna wskazywać ten sam commit co lokalna."
+  ]
+}
